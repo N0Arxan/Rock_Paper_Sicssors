@@ -4,59 +4,78 @@ import random
 wins = 0
 loses = 0
 ties = 0
-RPS=['Rock','Paper','Sicssors']
-print('\n Rock Paper Sicssors \n')
 
-while True :
-    
-    print("wins=%s losses=%s tie=%s \n" %(wins , loses ,ties))
-    #player move while 
-    while True :
-        player_move = input("enter (R)ock , (P)aper  (S)icssors and for (Q)uit \n")
-        if player_move == "Q" :
-            sys.exit()
-        elif player_move == "R" :
-            player_move = "Rock"
-            break
-        elif player_move == "P" :
-            player_move = "Paper"
-            break
-        elif  player_move == "S" :
-            player_move = "Sicssors"
-            break
+move_dict = {
+        'R': 'Rock',
+        'P': 'Paper',
+        'S': 'Scissors',
+        'Q': 'Quit'
+    }
+
+outcome_dict = {
+        'Rock': {'Rock': 'tie', 'Paper': 'lose', 'Scissors': 'win'},
+        'Paper': {'Rock': 'win', 'Paper': 'tie', 'Scissors': 'lose'},
+        'Scissors': {'Rock': 'lose', 'Paper': 'win', 'Scissors': 'tie'}
+    }
+
+
+RPS=['Rock','Paper','Scissors']
+
+
+def print_status():
+    print("\nRock Paper Scissors\n")
+    print("wins = {} losses = {} ties = {}\n".format(wins, loses, ties))
+
+
+def get_player_move():
+       
+       while True:
+        move = input("Enter (R)ock, (P)aper, (S)cissors or (Q)uit: \n").upper()
+        if move in move_dict:
+            if move == 'Q':
+                sys.exit()
+            return move_dict[move]
         else:
-            continue
-    print(player_move , " Vs ....")
+            print("Invalid input, please try again.")
 
-    machine_move = random.choice(RPS)
+def get_machine_move():
+    return random.choice(RPS)
+
+def determine_winner(player_move, machine_move):
+    global wins
+    global ties
+    global loses
+    outcome = outcome_dict[player_move][machine_move]
     
-    #logic 
-    if player_move == machine_move :
-        print(machine_move, "\n\nthis is a tie Bro calm down \n")
+    if outcome == 'tie':
+        print("{}\n\nIt's a tie!\n".format(machine_move))
+        
         ties += 1
-        continue
+
+    elif outcome == 'win':
+        print("{}\n\nYou won! Congrats!\n".format(machine_move))
+        
+        wins += 1
+
     else:
-        if player_move == "Rock" and machine_move == "Paper" :
-            print(machine_move, "\n\nthis is lose maybe next time losser \n")
-            loses += 1
-            continue
-        elif player_move == "Rock" and machine_move == "Sicssors" :
-            print(machine_move, "\n\nits very Rare but you won congrats \n")
-            wins += 1
-            continue
-        elif player_move == "Paper" and machine_move == "Sicssors" :
-            print(machine_move, "\n\nthis is lose maybe next time losser \n")
-            loses += 1
-            continue
-        elif player_move == "Paper" and machine_move == "Rock" :
-            print(machine_move, "\n\nits very Rare but you won congrats\n ")
-            wins += 1
-            continue
-        elif player_move == "Sicssors" and machine_move == "Rock" :
-            print(machine_move, "\n\nthis is lose maybe next time losser \n")
-            loses += 1
-            continue
-        elif player_move == "Sicssors" and machine_move == "Paper" :
-            print(machine_move, "\n\nits very Rare but you won congrats \n")
-            wins += 1
-            continue
+        print("{}\n\nYou lost! Better luck next time.\n".format(machine_move))
+        loses += 1
+
+def main():
+    
+    print_status()
+    
+    while True:
+        
+        player_move = get_player_move()
+        
+        print("{} vs ....".format(player_move))
+        
+        machine_move = get_machine_move()
+        
+        determine_winner(player_move, machine_move)
+        
+        print_status()
+
+
+main()
